@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="spiral.roadrunner.worker" class="Spiral\RoadRunner\Worker" public="false" autowire="true" autoconfigure="true">
+            <argument type="service" id="zolex.grpc.goridge.replay_wrapper" />
+        </service>
+
+        <service id="zolex.grpc.client_factory" class="Zolex\GrpcBundle\GRPC\ClientFactory" public="false" autowire="true" autoconfigure="true">
+            <argument type="service" id="parameter_bag" />
+        </service>
+        <service id="Zolex\GrpcBundle\GRPC\ClientFactory" alias="zolex.grpc.client_factory" />
+
+        <service id="zolex.grpc.goridge.replay_wrapper" class="Zolex\GrpcBundle\Goridge\RelayWrapper" public="false" autowire="true" autoconfigure="true" />
+        <service id="Zolex\GrpcBundle\Goridge\RelayWrapper" alias="zolex.grpc.goridge.replay_wrapper" />
+
+        <service id="zolex.grpc.invoker" class="Spiral\GRPC\Invoker" />
+
+        <service id="zolex.grpc.base_server" class="Spiral\GRPC\Server" public="false" autowire="true" autoconfigure="true">
+            <argument type="service" id="zolex.grpc.invoker" />
+            <argument type="collection" />
+        </service>
+
+        <service id="zolex.grpc.server" class="Zolex\GrpcBundle\GRPC\Server" public="true" autowire="true" autoconfigure="true">
+            <argument type="service" id="zolex.grpc.base_server" />
+            <argument type="service" id="spiral.roadrunner.worker" />
+            <argument type="tagged_iterator" tag="zolex.grpc.service" />
+            <argument />
+        </service>
+
+        <service id="zolex.grpc.logger.handler" class="Zolex\GrpcBundle\Logger\GoridgeRpcHandler" public="false" autowire="true" autoconfigure="true" />
+    </services>
+</container>
