@@ -30,6 +30,6 @@
             <argument />
         </service>
 
-        <service id="zolex.grpc.logger.handler" class="Zolex\GrpcBundle\Logger\GoridgeRpcHandler" public="false" autowire="true" autoconfigure="true" />
+        <service id="zolex.grpc.logger.handler" class="Zolex\GrpcBundle\Logger\StderrHandler" public="false" autowire="true" autoconfigure="true" />
     </services>
 </container>
