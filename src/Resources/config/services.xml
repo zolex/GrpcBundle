@@ -8,9 +8,7 @@
             <argument type="service" id="zolex.grpc.goridge.replay_wrapper" />
         </service>
 
-        <service id="zolex.grpc.client_factory" class="Zolex\GrpcBundle\GRPC\ClientFactory" public="false" autowire="true" autoconfigure="true">
-            <argument type="service" id="parameter_bag" />
-        </service>
+        <service id="zolex.grpc.client_factory" class="Zolex\GrpcBundle\GRPC\ClientFactory" public="false" autowire="true" autoconfigure="true" />
         <service id="Zolex\GrpcBundle\GRPC\ClientFactory" alias="zolex.grpc.client_factory" />
 
         <service id="zolex.grpc.goridge.replay_wrapper" class="Zolex\GrpcBundle\Goridge\RelayWrapper" public="false" autowire="true" autoconfigure="true" />

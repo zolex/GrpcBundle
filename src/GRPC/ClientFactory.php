@@ -13,20 +13,16 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class ClientFactory
 {
-    private ParameterBagInterface $parameterBag;
-
-    public function __construct(ParameterBagInterface $parameterBag)
+    public function __construct(private array $clientsConfig = [])
     {
-        $this->parameterBag = $parameterBag;
     }
 
     public function create(string $className): \Grpc\BaseStub
     {
-        $clientsConfig = $this->parameterBag->get('grpc_clients');
-        $config = $clientsConfig[$className] ?? $clientsConfig['default'] ?? null;
-
-        if (null === $config)
-            throw new Exception(sprintf('No gRPC client config found for "%s"', $className));
+        $config = $this->clientsConfig[$className] ?? $this->clientsConfig['default'] ?? null;
+        if (null === $config) {
+            throw new Exception(sprintf('No gRPC client config found for "%s" and no default config exists.', $className));
+        }
 
         $credentials = match ($config['secure'] ?? false) {
             false => \Grpc\ChannelCredentials::createInsecure(),

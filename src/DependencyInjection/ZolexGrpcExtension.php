@@ -33,6 +33,9 @@ class ZolexGrpcExtension extends Extension implements CompilerPassInterface
 
         $grpcServer = $container->getDefinition('zolex.grpc.server');
         $grpcServer->setArgument(3, $this->config['server']['interface_namespace']);
+
+        $clientFactory = $container->getDefinition('zolex.grpc.client_factory');
+        $clientFactory->setArgument(0, $this->config['clients']);
     }
 
     /**
