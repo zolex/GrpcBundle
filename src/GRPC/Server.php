@@ -10,30 +10,20 @@ use Spiral\RoadRunner\Worker;
 
 class Server
 {
-    private BaseServer $server;
-    private Worker $worker;
-
     /**
-     * @var ServiceInterface[]
+     * @var iterable<ServiceInterface> $services
      */
-    private iterable $services;
-    private string $interfaceNamespace;
-
-    /**
-     * @param BaseServer $server
-     * @param Worker $worker
-     * @param ServiceInterface[] $services
-     * @param string $interfaceNamespace
-     */
-    public function __construct(BaseServer $server, Worker $worker, iterable $services, string $interfaceNamespace)
-    {
-        $this->server = $server;
-        $this->worker = $worker;
-        $this->services = $services;
-        $this->interfaceNamespace = $interfaceNamespace;
+    public function __construct(
+        private BaseServer $server,
+        private Worker $worker,
+        private iterable $services
+    ) {
     }
 
     /**
+     * gRPC services must be rigistered with their generated interfaces.
+     * Automatically picks the right interface for registration.
+     *
      * @throws \ReflectionException
      */
     private function registerServices()
@@ -42,7 +32,7 @@ class Server
             $reflection = new \ReflectionClass($service);
             $interfaces = $reflection->getInterfaceNames();
             foreach ($interfaces as $interface) {
-                if (str_contains($interface, $this->interfaceNamespace)) {
+                if (is_subclass_of($interface, ServiceInterface::class)) {
                     $this->server->registerService($interface, $service);
                     break;
                 }

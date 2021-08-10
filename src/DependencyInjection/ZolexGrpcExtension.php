@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zolex\GrpcBundle\DependencyInjection;
 
+use Spiral\GRPC\ServiceInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,9 +32,6 @@ class ZolexGrpcExtension extends Extension implements CompilerPassInterface
         $baseServer = $container->getDefinition('zolex.grpc.base_server');
         $baseServer->setArgument(1, $this->config['server']['options']);
 
-        $grpcServer = $container->getDefinition('zolex.grpc.server');
-        $grpcServer->setArgument(3, $this->config['server']['interface_namespace']);
-
         $clientFactory = $container->getDefinition('zolex.grpc.client_factory');
         $clientFactory->setArgument(0, $this->config['clients']);
     }
@@ -47,7 +45,7 @@ class ZolexGrpcExtension extends Extension implements CompilerPassInterface
             $class = $definition->getClass();
             if (null !== $class && class_exists($class, false)
                 && ($interfaces = class_implements($class))
-                && isset($interfaces['Spiral\GRPC\ServiceInterface'])) {
+                && isset($interfaces[ServiceInterface::class])) {
                 $definition->addTag('zolex.grpc.service');
             }
         }
