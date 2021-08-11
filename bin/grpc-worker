@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+ini_set('display_errors', 'stderr'); // error_log will be reflected properly in roadrunner logs
+
+$dir = __DIR__;
+while (true) {
+    $dir = dirname($dir);
+    if (file_exists($dir . '/autoload.php')) {
+        require dirname($dir).'/config/bootstrap.php';
+        break;
+    }
+}
+
+$kernel = new \App\Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$kernel->boot();
+$kernel->getContainer()->get('zolex.grpc.server')->serve();
