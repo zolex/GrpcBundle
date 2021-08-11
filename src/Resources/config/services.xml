@@ -8,9 +8,6 @@
             <argument type="service" id="zolex.grpc.goridge.replay_wrapper" />
         </service>
 
-        <service id="zolex.grpc.client_factory" class="Zolex\GrpcBundle\GRPC\ClientFactory" public="false" autowire="true" autoconfigure="true" />
-        <service id="Zolex\GrpcBundle\GRPC\ClientFactory" alias="zolex.grpc.client_factory" />
-
         <service id="zolex.grpc.goridge.replay_wrapper" class="Zolex\GrpcBundle\Goridge\RelayWrapper" public="false" autowire="true" autoconfigure="true" />
         <service id="Zolex\GrpcBundle\Goridge\RelayWrapper" alias="zolex.grpc.goridge.replay_wrapper" />
 
@@ -24,7 +21,6 @@
         <service id="zolex.grpc.server" class="Zolex\GrpcBundle\GRPC\Server" public="true" autowire="true" autoconfigure="true">
             <argument type="service" id="zolex.grpc.base_server" />
             <argument type="service" id="spiral.roadrunner.worker" />
-            <argument type="tagged_iterator" tag="zolex.grpc.service" />
             <argument />
         </service>
 
