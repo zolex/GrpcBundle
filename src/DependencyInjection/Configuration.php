@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('modix_thrift_server');
+        $treeBuilder = new TreeBuilder('zolex_grpc');
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
