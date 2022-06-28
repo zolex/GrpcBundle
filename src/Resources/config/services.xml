@@ -5,15 +5,12 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="spiral.roadrunner.worker" class="Spiral\RoadRunner\Worker" public="false" autowire="true" autoconfigure="true">
-            <argument type="service" id="zolex.grpc.goridge.replay_wrapper" />
+            <factory class="Spiral\RoadRunner\Worker" method="create" />
         </service>
 
-        <service id="zolex.grpc.goridge.replay_wrapper" class="Zolex\GrpcBundle\Goridge\RelayWrapper" public="false" autowire="true" autoconfigure="true" />
-        <service id="Zolex\GrpcBundle\Goridge\RelayWrapper" alias="zolex.grpc.goridge.replay_wrapper" />
+        <service id="zolex.grpc.invoker" class="Spiral\RoadRunner\GRPC\Invoker" />
 
-        <service id="zolex.grpc.invoker" class="Spiral\GRPC\Invoker" />
-
-        <service id="zolex.grpc.base_server" class="Spiral\GRPC\Server" public="false" autowire="true" autoconfigure="true">
+        <service id="zolex.grpc.base_server" class="Spiral\RoadRunner\GRPC\Server" public="false" autowire="true" autoconfigure="true">
             <argument type="service" id="zolex.grpc.invoker" />
             <argument type="collection" />
         </service>

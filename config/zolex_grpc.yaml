@@ -1,0 +1,9 @@
+zolex_grpc:
+  server:
+    enabled: true
+    options:
+      debug: true
+  clients:
+    default:
+      host: host.docker.internal
+      port: 3886

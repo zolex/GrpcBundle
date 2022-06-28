@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zolex\GrpcBundle\GRPC;
 
-use Spiral\GRPC\Server as BaseServer;
+use Spiral\RoadRunner\GRPC\Server as BaseServer;
 use Spiral\RoadRunner\Worker;
 
 class Server
@@ -15,7 +15,7 @@ class Server
     ) {
     }
 
-    public function serve()
+    public function serve(): void
     {
         $this->server->serve($this->worker);
     }

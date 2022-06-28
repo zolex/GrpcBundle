@@ -6,7 +6,8 @@ namespace Zolex\GrpcBundle\DependencyInjection;
 
 use Grpc\BaseStub;
 use Grpc\ChannelCredentials;
-use Spiral\GRPC\ServiceInterface;
+use Spiral\GRPC\ServiceInterface as LegacyServiceInterface;
+use Spiral\RoadRunner\GRPC\ServiceInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -72,20 +73,22 @@ class ZolexGrpcExtension extends Extension implements CompilerPassInterface
                 ]);
 
             // register grpc-services in the grpc base server
-            } else if (($interfaces = class_implements($class)) && isset($interfaces[ServiceInterface::class])) {
-                if (true === $this->config['server']['enabled']) {
-                    $definition->addTag('zolex.grpc.service');
-                    foreach ($interfaces as $interface) {
-                        if (is_subclass_of($interface, ServiceInterface::class)) {
-                            $server->addMethodCall('registerService', [
-                                $interface,
-                                $definition,
-                            ]);
-                            break;
+            } else if (($interfaces = class_implements($class))) {
+                if (isset($interfaces[ServiceInterface::class]) || isset($interfaces[LegacyServiceInterface::class])) {
+                    if (true === $this->config['server']['enabled']) {
+                        $definition->addTag('zolex.grpc.service');
+                        foreach ($interfaces as $interface) {
+                            if (is_subclass_of($interface, ServiceInterface::class)) {
+                                $server->addMethodCall('registerService', [
+                                    $interface,
+                                    $definition,
+                                ]);
+                                break;
+                            }
                         }
+                    } else {
+                        $container->removeDefinition($id);
                     }
-                } else {
-                    $container->removeDefinition($id);
                 }
             }
         }
